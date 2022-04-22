@@ -14,4 +14,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClickBait.Application\ClickBait.Application.csproj" />
+    <ProjectReference Include="..\ClickBait.Infra\ClickBait.Infra.csproj" />
+  </ItemGroup>
+
 </Project>
