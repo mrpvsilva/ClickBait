@@ -134,5 +134,18 @@ services:
     ports:
       - 8082:8082
 
+  api:
+    build: 
+      context: ./src/ClickBait
+      dockerfile: ClickBait.API/Dockerfile
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Staging
+    restart: always
+    ports:
+        - 4200:80
+    networks:
+        - click_bait
+    
+
 networks:
   click_bait:
