@@ -1,0 +1,18 @@
+{
+    "type": "record",
+    "name": "Click",
+    "namespace": "ClickBait.Domain.Entities",
+    "fields": [
+      {
+        "name": "DateTime",
+        "type": "string"
+      },
+      {
+        "name": "PostId",
+        "type": {
+          "type": "string",
+          "logicalType": "uuid"
+        }
+      }
+    ]
+  }

@@ -5,7 +5,7 @@
         "connection.url": "jdbc:mysql://mysql:3306/click-bait",
         "connection.user": "root",
         "connection.password": "root@123",
-        "table.name.format": "clicksCount",
+        "table.name.format": "ClicksCounts",
         "heartbeat.interval.ms": 1000,
         "topics": "CLICKS_COUNT_TABLE",
         "fields.whitelist": "PostId, Qtd",

@@ -12,7 +12,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:6.2.0
     ports:
-     - "29092:29092"
+      - "29092:29092"
     depends_on:
       - zookeeper
     environment:
@@ -70,7 +70,7 @@ services:
     volumes:
       - .\Kafka\Connectors:/usr/share/java/connectors
     networks:
-      - click_bait 
+      - click_bait
 
   ksqldb-server:
     image: confluentinc/cp-ksqldb-server:6.2.0
@@ -89,7 +89,7 @@ services:
       KSQL_KSQL_CONNECT_URL: "http://kafka-connect:8083"
     networks:
       - click_bait
-  
+
   ksqldb-cli:
     image: confluentinc/cp-ksqldb-cli:6.2.0
     depends_on:
@@ -122,7 +122,7 @@ services:
       - kafka
     networks:
       - click_bait
-  
+
   mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -144,19 +144,22 @@ services:
       - click_bait
 
   api:
-    build: 
+    build:
       context: ./src/ClickBait
       dockerfile: ClickBait.API/Dockerfile
-    environment: 
-      - ASPNETCORE_ENVIRONMENT=Staging
+    environment:
       - KafkaConfig:BootstrapServers=kafka:9092
       - KafkaConfig:SchemaRegistryUrl=http://schema-registry:8081
+      - ConnectionStrings:DefaultConnection=Server=mysql;Port=3306;Uid=root;Password=root@123;Database=click-bait;Pooling=true;
     restart: always
+    depends_on:
+      - kafka
+      - schema-registry
+      - mysql
     ports:
-        - 4200:80
+      - 4200:80
     networks:
-        - click_bait
-    
+      - click_bait
 
 networks:
   click_bait:

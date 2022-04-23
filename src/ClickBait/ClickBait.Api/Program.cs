@@ -18,6 +18,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// migrate any database changes on startup (includes initial db creation)
+app.Services.ConfigureApplication();
+
 
 app.UseHttpsRedirection();
 

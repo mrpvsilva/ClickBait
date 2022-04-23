@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 
 namespace ClickBait.Application.Services
 {
-    public interface IClickService : IService
+    public interface IPostService : IService
     {
-        Task<Click> Register(Click click);
+        Task<IEnumerable<Post>> Get(Expression<Func<Post, bool>> predicate);
     }
 }

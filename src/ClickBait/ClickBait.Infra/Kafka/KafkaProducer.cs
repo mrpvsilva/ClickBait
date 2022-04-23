@@ -25,7 +25,7 @@ namespace ClickBait.Infra.Kafka
             _registryConfig = new SchemaRegistryConfig
             {
                 Url = config.SchemaRegistryUrl
-                
+
             };
         }
         public async Task SendMessage<TKey, TValue>(string topic, TKey key, TValue value)
@@ -33,8 +33,8 @@ namespace ClickBait.Infra.Kafka
             using (var registry = new CachedSchemaRegistryClient(_registryConfig))
             {
                 var builder = new ProducerBuilder<TKey, TValue>(_producerConfig)
-                    .SetAvroValueSerializer(registry, registerAutomatically: AutomaticRegistrationBehavior.Always)
-                    .SetAvroKeySerializer(registry, registerAutomatically: AutomaticRegistrationBehavior.Always)
+                    .SetAvroValueSerializer(registry, registerAutomatically: AutomaticRegistrationBehavior.Never)
+                    .SetAvroKeySerializer(registry, registerAutomatically: AutomaticRegistrationBehavior.Never)
                     .SetErrorHandler((_, error) => Console.Error.WriteLine(error.ToString()));
 
                 using (var producer = builder.Build())
