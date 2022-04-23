@@ -68,7 +68,7 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
     volumes:
-      - .\Kafka\Connectors:/usr/share/java/connectors
+      - .\Connectors:/usr/share/java/connectors
     networks:
       - click_bait
 
@@ -158,6 +158,23 @@ services:
       - mysql
     ports:
       - 4200:80
+    networks:
+      - click_bait
+
+  kafka-setup:
+    build:
+      context: ./src/KafkaSetup
+    environment:
+      - BootstrapServers=kafka:9092
+      - KsqldbServer=http://ksqldb-server:8088
+      - KafkaConnect=http://kafka-connect:8083
+      - SchemaRegistry=http://schema-registry:8081
+    restart: on-failure
+    depends_on:
+      - kafka
+      - kafka-connect
+      - schema-registry
+      - ksqldb-server
     networks:
       - click_bait
 

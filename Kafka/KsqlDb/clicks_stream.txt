@@ -1,2 +1,0 @@
-CREATE OR REPLACE STREAM clicks_stream (PostId VARCHAR, DateTime VARCHAR)
-WITH(kafka_topic='click-bait', value_format='AVRO');

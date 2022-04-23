@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS clicks_count_table;
+DROP STREAM IF EXISTS clicks_stream;
+CREATE OR REPLACE STREAM clicks_stream (PostId VARCHAR, DateTime VARCHAR) WITH(kafka_topic='click-bait', value_format='AVRO');
+CREATE OR REPLACE TABLE clicks_count_table WITH (FORMAT='AVRO') AS SELECT PostId, Count(*) as Qtd FROM clicks_stream GROUP BY PostId EMIT CHANGES;

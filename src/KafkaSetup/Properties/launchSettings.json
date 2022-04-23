@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "KafkaSetup": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENV": "Dev"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
