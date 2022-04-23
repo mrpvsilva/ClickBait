@@ -25,6 +25,7 @@ namespace ClickBait.Infra.Kafka
             _registryConfig = new SchemaRegistryConfig
             {
                 Url = config.SchemaRegistryUrl
+                
             };
         }
         public async Task SendMessage<TKey, TValue>(string topic, TKey key, TValue value)

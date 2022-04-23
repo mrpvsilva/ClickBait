@@ -66,7 +66,9 @@ services:
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR    
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+    volumes:
+      - .\Kafka\Connectors:/usr/share/java/connectors
     networks:
       - click_bait 
 
@@ -126,16 +128,20 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: roo@123
+      MYSQL_ROOT_PASSWORD: root@123
       MYSQL_DATABASE: click-bait
     ports:
       - 3306:3306
+    networks:
+      - click_bait
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8082:8082
+    networks:
+      - click_bait
 
   api:
     build: 

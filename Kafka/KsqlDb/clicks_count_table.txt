@@ -1,0 +1,8 @@
+CREATE OR REPLACE TABLE clicks_count_table
+WITH (FORMAT='AVRO') AS
+SELECT
+ PostId,
+ Count(*) as Qtd
+FROM clicks_stream
+GROUP BY PostId 
+EMIT CHANGES;

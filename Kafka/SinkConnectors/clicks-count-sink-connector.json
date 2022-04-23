@@ -1,0 +1,32 @@
+{
+    "name": "clicks-count-sink-connector",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "connection.url": "jdbc:mysql://mysql:3306/click-bait",
+        "connection.user": "root",
+        "connection.password": "root@123",
+        "table.name.format": "clicksCount",
+        "heartbeat.interval.ms": 1000,
+        "topics": "CLICKS_COUNT_TABLE",
+        "fields.whitelist": "PostId, Qtd",
+        "auto.create": "false",
+        "insert.mode": "upsert",
+        "pk.mode":"record_key",
+        "pk.fields": "PostId",
+        
+        "schema.registry.url": "http://schema-registry:8081",
+
+        "key.converter": "io.confluent.connect.avro.AvroConverter",
+        "key.converter.schema.registry.url": "http://schema-registry:8081",
+
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": "http://schema-registry:8081", 
+
+        "transforms": "RenameField",
+        "transforms.RenameField.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+        "transforms.RenameField.renames": "QTD:Qtd",
+
+        "tasks.max": "1",
+        "batch.size": "1"
+    }
+  }
