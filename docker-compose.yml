@@ -149,6 +149,8 @@ services:
       dockerfile: ClickBait.API/Dockerfile
     environment: 
       - ASPNETCORE_ENVIRONMENT=Staging
+      - KafkaConfig:BootstrapServers=kafka:9092
+      - KafkaConfig:SchemaRegistryUrl=http://schema-registry:8081
     restart: always
     ports:
         - 4200:80
