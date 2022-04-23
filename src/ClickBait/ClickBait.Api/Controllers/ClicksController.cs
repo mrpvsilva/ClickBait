@@ -18,7 +18,7 @@ namespace ClickBait.Api.Controllers
         [HttpPost("{postId}")]
         public async Task<IActionResult> Post([FromRoute] Guid postId)
         {
-            await _mediator.Send(new RegisterClickCommand(postId));
+            _ = _mediator.Send(new RegisterClickCommand(postId));
             return Accepted();
         }
     }
