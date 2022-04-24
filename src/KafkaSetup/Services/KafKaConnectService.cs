@@ -1,26 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
-using Polly;
-using Polly.Extensions.Http;
-using Polly.Retry;
-using Polly.Timeout;
-using System.Text;
+﻿using System.Text;
 
 namespace KafkaSetup.Services
 {
-    internal class KafKaConnectServices
+    internal class KafKaConnectService
     {
         private readonly HttpClient _httpClient;
         private readonly IEnumerable<FileInfo> _files;
-        private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
 
-        public KafKaConnectServices(IConfiguration configuration, AsyncRetryPolicy<HttpResponseMessage> retryPolicy)
+        public KafKaConnectService(HttpClient httpClient)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(configuration.GetSection("KafkaConnect").Value)
-            };
-
-            _retryPolicy = retryPolicy;
+            _httpClient = httpClient;
 
             var dir = new DirectoryInfo("./Kafka/SinkConnectors");
 
@@ -31,13 +20,10 @@ namespace KafkaSetup.Services
 
             _files = dir.GetFiles("*.json");
 
-            HealthCheck().Wait();
+            HealthCheck();
         }
 
-        async Task HealthCheck()
-        {
-            await _retryPolicy.ExecuteAsync(() => _httpClient.GetAsync(""));
-        }
+        HttpResponseMessage HealthCheck() => _httpClient.GetAsync("").Result;
 
         public void DropConnectors()
         {

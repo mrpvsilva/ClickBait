@@ -4,7 +4,6 @@ using Confluent.SchemaRegistry;
 using KafkaSetup.Models;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using Polly.Retry;
 
 namespace KafkaSetup.Services
 {
@@ -12,20 +11,16 @@ namespace KafkaSetup.Services
     {
         private readonly IConfiguration _config;
         private readonly HttpClient _httpClient;
-        private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
 
-        public KafkaService(IConfiguration config, AsyncRetryPolicy<HttpResponseMessage> retryPolicy)
+        public KafkaService(IConfiguration config, HttpClient httpClient)
         {
             _config = config;
-            _retryPolicy = retryPolicy;
-
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(config.GetSection("SchemaRegistry").Value)
-            };
-
-            HealthCheck().Wait();
+            _httpClient = httpClient;
+            HealthCheck();
         }
+
+        HttpResponseMessage HealthCheck() => _httpClient.GetAsync("").Result;
+
         public void CreateTopics()
         {
             var adminConfig = new AdminClientConfig
@@ -64,7 +59,7 @@ namespace KafkaSetup.Services
                         })
                        .Wait();
 
-                        Console.WriteLine($"Topic {topic} created successfully");
+                        Console.WriteLine($"Topic {topic.Name} created successfully");
                     }
 
                     CreateSchema($"{topic.Name}-key", topic.Key);
@@ -75,11 +70,6 @@ namespace KafkaSetup.Services
                     Console.WriteLine($"An error occured creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
                 }
             }
-        }
-
-        async Task HealthCheck()
-        {
-            await _retryPolicy.ExecuteAsync(() => _httpClient.GetAsync(""));
         }
 
         void CreateSchema(string subject, JsonDocument jsonSchema)

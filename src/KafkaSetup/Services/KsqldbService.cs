@@ -1,33 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using Polly;
-using Polly.Extensions.Http;
-using Polly.Retry;
-using Polly.Timeout;
-using System.Text;
+﻿using System.Text;
 
 namespace KafkaSetup.Services
 {
     internal class KsqldbService
     {
         private readonly HttpClient _httpClient;
-        private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
 
-        public KsqldbService(IConfiguration config, AsyncRetryPolicy<HttpResponseMessage> retryPolicy)
+        public KsqldbService(HttpClient httpClient)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(config.GetSection("KsqldbServer").Value)
-            };
-
-            _retryPolicy = retryPolicy;
-
-            HealthCheck().Wait();
+            _httpClient = httpClient;
+            HealthCheck();
         }
 
-        async Task HealthCheck()
-        {
-            await _retryPolicy.ExecuteAsync(() => _httpClient.GetAsync(""));
-        }
+        HttpResponseMessage HealthCheck() => _httpClient.GetAsync("").Result;
 
         public void ExecuteCommandsKsqldb()
         {
