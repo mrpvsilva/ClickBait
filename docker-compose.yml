@@ -143,7 +143,7 @@ services:
     networks:
       - click_bait
 
-  api:
+  web-api:
     build:
       context: ./src/ClickBait
       dockerfile: ClickBait.API/Dockerfile
@@ -156,8 +156,6 @@ services:
       - kafka
       - schema-registry
       - mysql
-    ports:
-      - 4200:80
     networks:
       - click_bait
 
@@ -175,6 +173,16 @@ services:
       - kafka-connect
       - schema-registry
       - ksqldb-server
+    networks:
+      - click_bait
+
+  reverse-proxy:
+    image: reverse-proxy
+    container_name: reverse-proxy
+    build:
+      context: ./src/Nginx
+    ports:
+      - 80:80
     networks:
       - click_bait
 
